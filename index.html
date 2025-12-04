@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Get Key Tool</title>
+<title>Key Tool</title>
 
 <style>
     /* ===== RESET ===== */
@@ -145,14 +145,14 @@ function createSnow() {
     const snow = document.createElement("div");
     snow.classList.add("snowflake");
     snow.textContent = "❄";
-    snow.style.left = Math.random() * 100 + "vw";
-    snow.style.fontSize = (8 + Math.random() * 12) + "px";
-    snow.style.animationDuration = (4 + Math.random() * 6) + "s";
+    snow.style.left = Math.random() * 150 + "vw";
+    snow.style.fontSize = (8 + Math.random() * 19) + "px";
+    snow.style.animationDuration = (4 + Math.random() * 10) + "s";
     document.body.appendChild(snow);
 
     setTimeout(() => snow.remove(), 10000);
 }
-setInterval(createSnow, 150);
+setInterval(createSnow, 100);
 
 /* ---------------- CHANGE THEME ---------------- */
 function changeTheme(theme) {
@@ -169,7 +169,7 @@ function changeTheme(theme) {
     <div id="output">Loading...</div>
 
     <button id="copyButton" onclick="copyToClipboard()" style="display:none;">
-        Hiển thị Key
+        Copy Key
     </button>
 
     <br><br>
