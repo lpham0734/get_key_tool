@@ -1,83 +1,183 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display and Copy Query Parameter</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        h1 {
-            color: #333;
-        }
-        #output {
-            margin: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            font-size: 1.2em;
-            color: #333;
-            border-radius: 5px;
-            min-width: 200px;
-            text-align: center;
-        }
-        #copyButton {
-            padding: 10px 20px;
-            font-size: 1em;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #copyButton:hover {
-            background-color: #0056b3;
-        }
-    </style>
-    <script>
-        function getQueryParam() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const key = urlParams.get('key');
-            const outputElement = document.getElementById('output');
-            const copyButton = document.getElementById('copyButton');
-            
-            if (key) {
-                outputElement.textContent = key;
-                copyButton.style.display = 'inline-block';
-            } else {
-                outputElement.textContent = 'No key found in query parameters.';
-                copyButton.style.display = 'none';
-            }
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Key Tool</title>
 
-        function copyToClipboard() {
-            const outputElement = document.getElementById('output');
-            const key = outputElement.textContent;
+<style>
+    /* ===== RESET ===== */
+    * { margin:0; padding:0; box-sizing:border-box; }
 
-            if (key) {
-                const textarea = document.createElement('textarea');
-                textarea.value = key;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                alert('Copied: ' + key);
-            }
+    body {
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+    }
+
+    /* ===== THEMES ===== */
+    body.light { background: #f0f0f0; color:#222; }
+    body.dark { background: #111; color:#fff; }
+    body.christmas { background: linear-gradient(#ff0000, #006400); color:#fff; }
+
+    /* ===== CARD ===== */
+    .card {
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(8px);
+        border-radius: 15px;
+        padding: 25px;
+        width: 300px;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    h1 { margin-bottom: 10px; }
+
+    /* ===== KEY BOX ===== */
+    #output {
+        padding: 10px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 5px;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        min-height: 35px;
+    }
+
+    /* ===== LED BUTTON ===== */
+    #copyButton {
+        padding: 12px 25px;
+        border: none;
+        cursor: pointer;
+        color: #fff;
+        font-size: 1.1em;
+        border-radius: 10px;
+        position: relative;
+        background: #333;
+        overflow: hidden;
+    }
+
+    /* LED chạy vòng */
+    #copyButton::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border-radius: 12px;
+        background: linear-gradient(
+            120deg,
+            red,
+            yellow,
+            lime,
+            cyan,
+            blue,
+            magenta,
+            red
+        );
+        background-size: 300%;
+        z-index: -1;
+        animation: ledRun 3s linear infinite;
+    }
+
+    @keyframes ledRun {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 300% 50%; }
+    }
+
+    /* ===== THEME BUTTON ===== */
+    .theme-btn {
+        margin-top: 15px;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    /* ===== SNOW ===== */
+    .snowflake {
+        position: fixed;
+        top: -10px;
+        color: white;
+        font-size: 10px;
+        pointer-events: none;
+        animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+        to {
+            transform: translateY(110vh) rotate(360deg);
         }
-    </script>
+    }
+</style>
+
+<script>
+/* ---------------- GET KEY ---------------- */
+function getQueryParam() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const key = urlParams.get('key');
+    const outputElement = document.getElementById('output');
+    const copyButton = document.getElementById('copyButton');
+
+    if (key) {
+        outputElement.textContent = key;
+        copyButton.style.display = 'inline-block';
+    } else {
+        outputElement.textContent = 'Không tìm thấy key!';
+        copyButton.style.display = 'none';
+    }
+}
+
+/* ---------------- COPY ---------------- */
+function copyToClipboard() {
+    const key = document.getElementById('output').textContent;
+    navigator.clipboard.writeText(key);
+    alert("Copied: " + key);
+}
+
+/* ---------------- SNOW EFFECT ---------------- */
+function createSnow() {
+    const snow = document.createElement("div");
+    snow.classList.add("snowflake");
+    snow.textContent = "❄";
+    snow.style.left = Math.random() * 100 + "vw";
+    snow.style.fontSize = (8 + Math.random() * 12) + "px";
+    snow.style.animationDuration = (4 + Math.random() * 6) + "s";
+    document.body.appendChild(snow);
+
+    setTimeout(() => snow.remove(), 10000);
+}
+setInterval(createSnow, 150);
+
+/* ---------------- CHANGE THEME ---------------- */
+function changeTheme(theme) {
+    document.body.className = theme;
+}
+</script>
 </head>
-<body onload="getQueryParam()">
-    <h1>Code by GPT-4o</h1>
-    <p id="output">Loading...</p>
-    <button id="copyButton" style="display:none;" onclick="copyToClipboard()">Copy Key</button>
+
+<body class="christmas" onload="getQueryParam()">
+
+<div class="card">
+    <h1>🎄 Get Key Tool 🎄</h1>
+
+    <div id="output">Loading...</div>
+
+    <button id="copyButton" onclick="copyToClipboard()" style="display:none;">
+        Hiển thị Key
+    </button>
+
+    <br><br>
+
+    <button class="theme-btn" onclick="changeTheme('light')">Light</button>
+    <button class="theme-btn" onclick="changeTheme('dark')">Dark</button>
+    <button class="theme-btn" onclick="changeTheme('christmas')">Christmas 🎅</button>
+</div>
+
 </body>
 </html>
-
